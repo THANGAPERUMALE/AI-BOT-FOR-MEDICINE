@@ -1,5 +1,6 @@
 numpy
 tensorflow==2.17.0
 scikit-learn
+requests
 pillow
 streamlit_option_menu

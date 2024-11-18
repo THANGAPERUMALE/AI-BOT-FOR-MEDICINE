@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from PIL import Image
+import requests
 from streamlit_option_menu import option_menu  # Install with 'pip install streamlit-option-menu'
 
 # Set parameters
@@ -12,15 +13,15 @@ image_size_ct = (350, 350)    # CT scan image size
 # Load the trained models
 @st.cache_resource
 def load_pneumonia_model():
-    return load_model(r"C:\Users\thangaperumale\Documents\PROJECT\AI_BOT_FOR_MEDICINE\pneumonia_detection_model.h5")
+    return load_model(r"/workspaces/AI-BOT-FOR-MEDICINE/pneumonia_detection_model.h5")
 
 @st.cache_resource
 def load_edema_model():
-    return load_model(r"C:\Users\thangaperumale\Documents\PROJECT\AI_BOT_FOR_MEDICINE\edema_detection_model.h5")
+    return load_model(r"/workspaces/AI-BOT-FOR-MEDICINE/edema_detection_model.h5")
 
 @st.cache_resource
 def load_cancer_model():
-    return load_model(r"C:\Users\thangaperumale\Documents\PROJECT\AI_BOT_FOR_MEDICINE\trained_lung_cancer_model.h5")
+    return load_model(r"/workspaces/AI-BOT-FOR-MEDICINE/trained_lung_cancer_model.h5")
 
 # Preprocess the input image
 def load_and_preprocess_image(uploaded_image, image_size, is_xray=False):
@@ -66,14 +67,18 @@ elif selected == "Pneumonia Detection":
     st.write("Upload an X-ray image to check for Pneumonia.")
 
     uploaded_file = st.file_uploader("Choose an X-ray image...", type=["jpg", "jpeg", "png"])
+    print("Everythin okay")
+    print(type(uploaded_file))
     
     if uploaded_file is not None:
+        print(type(uploaded_file))
         uploaded_image = Image.open(uploaded_file).convert("L")  # Convert to grayscale
         st.image(uploaded_image, caption="Uploaded X-ray", use_column_width=True)
         
         with st.spinner("Analyzing the image..."):
             img_array = load_and_preprocess_image(uploaded_image, image_size_xray, is_xray=True)
             prediction = load_pneumonia_model().predict(img_array)[0][0]
+            print("Hii")
 
         progress = int(prediction * 100)
         st.progress(progress)
