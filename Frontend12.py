@@ -13,15 +13,15 @@ image_size_ct = (350, 350)    # CT scan image size
 # Load the trained models
 @st.cache_resource
 def load_pneumonia_model():
-    return load_model(r"pneumonia_detection_model.h5")
+    return load_model(r"./pneumonia_detection_model.h5")
 
 @st.cache_resource
 def load_edema_model():
-    return load_model(r"edema_detection_model.h5")
+    return load_model(r"./edema_detection_model.h5")
 
 @st.cache_resource
 def load_cancer_model():
-    return load_model(r"trained_lung_cancer_model.h5")
+    return load_model(r"./trained_lung_cancer_model.h5")
 
 # Preprocess the input image
 def load_and_preprocess_image(uploaded_image, image_size, is_xray=False):
