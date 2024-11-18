@@ -13,7 +13,7 @@ image_size_ct = (350, 350)    # CT scan image size
 # Load the trained models
 @st.cache_resource
 def load_pneumonia_model():
-    return load_model(os.path.join(os.getcwd(), 'pneumonia_detection_model.h5'))
+    return tf.keras.models.load_model(os.path.join(os.getcwd(), 'pneumonia_detection_model.h5'))
 
 @st.cache_resource
 def load_edema_model():
