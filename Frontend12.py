@@ -17,11 +17,11 @@ def load_pneumonia_model():
 
 @st.cache_resource
 def load_edema_model():
-    return load_model(r"./edema_detection_model.h5")
+    return tf.keras.models.load_model(os.path.join(os.getcwd(), 'edema_detection_model.h5'))
 
 @st.cache_resource
 def load_cancer_model():
-    return load_model(r"./trained_lung_cancer_model.h5")
+    return tf.keras.models.load_model(os.path.join(os.getcwd(), 'trained_lung_cancer_model.h5'))
 
 # Preprocess the input image
 def load_and_preprocess_image(uploaded_image, image_size, is_xray=False):
