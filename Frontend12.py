@@ -52,13 +52,13 @@ url_3 ="https://pnemonia.s3.us-east-1.amazonaws.com/trained_lung_cancer_model.h5
 
 
 def load_pneumonia_model():
-     model_1 = load_model_from_url(url_1)
-     return model_1
+    model_1 = load_model_from_url(url_1)
+    return model_1
 
 @st.cache_resource
 def load_edema_model():
-   model_2 = load_model_from_url(url_2)
-     return model_2
+    model_2 = load_model_from_url(url_2)
+    return model_2
 
 
 @st.cache_resource
