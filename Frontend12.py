@@ -52,14 +52,34 @@ url_3 ="https://pnemonia.s3.us-east-1.amazonaws.com/trained_lung_cancer_model.h5
 
 
 def load_pneumonia_model():
-    model_1 = load_model_from_url(url_1)
-    return model_1
+     model_1 = load_model_from_url(url_1)
+     return model_1
 
 @st.cache_resource
 def load_edema_model():
-    model_2 = load_model_from_url(url_2)
-    return model_2
+    url = "https://pnemonia.s3.us-east-1.amazonaws.com/edema_detection_model.h5"
 
+    # Check if model is already cached, if not, download it
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".h5") as temp_file:
+            model_path = temp_file.name
+
+            # Download model if not cached
+            st.info("Downloading model...")
+            response = requests.get(url)
+            response.raise_for_status()
+
+            # Write model content to temporary file
+            with open(model_path, 'wb') as model_file:
+                model_file.write(response.content)
+
+            st.success("Model loaded successfully.")
+            return load_model(model_path)
+
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error downloading model: {e}")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
 @st.cache_resource
 def load_cancer_model():
