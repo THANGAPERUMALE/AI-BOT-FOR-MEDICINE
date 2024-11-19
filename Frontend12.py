@@ -4,6 +4,7 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from PIL import Image
 import requests
+import tempfile
 from streamlit_option_menu import option_menu  # Install with 'pip install streamlit-option-menu'
 
 # Set parameters
@@ -13,8 +14,24 @@ image_size_ct = (350, 350)    # CT scan image size
 # Load the trained models
 @st.cache_resource
 def load_pneumonia_model():
-    print(os.path.join(os.getcwd(), 'pneumonia_detection_model.h5'))
-    return tf.keras.models.load_model(os.path.join(os.getcwd(), 'pneumonia_detection_model.h5'))
+    url="https://pnemonia.s3.us-east-1.amazonaws.com/pneumonia_detection_model.h5"
+    #print(os.path.join(os.getcwd(), 'pneumonia_detection_model.h5'))
+    #return tf.keras.models.load_model(os.path.join(os.getcwd(), 'pneumonia_detection_model.h5'))
+    if st.button('Load Model'):
+        try:
+            st.info("downloading")
+            response=requests.get(url)
+            response.raise_for_status()
+            with tempfile.NamedTemporaryFile(delete=False,suffix=".h5") as temp_file:
+                temp_file.write(response.content) 
+                model_path=temp_file.name
+            return load_model(model_path)
+        except Exception as e:
+            st.error(f"error: {e}")
+
+
+
+
 
 @st.cache_resource
 def load_edema_model():
