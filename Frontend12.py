@@ -15,12 +15,10 @@ image_size_ct = (350, 350)    # CT scan image size
 
 @st.cache_resource
 def load_pneumonia_model():
-    # URL to the pre-trained pneumonia detection model
     url = "https://pnemonia.s3.us-east-1.amazonaws.com/pneumonia_detection_model.h5"
 
     # Check if model is already cached, if not, download it
     try:
-        # Check if the model file exists in the local temporary directory
         with tempfile.NamedTemporaryFile(delete=False, suffix=".h5") as temp_file:
             model_path = temp_file.name
 
@@ -48,11 +46,55 @@ def load_pneumonia_model():
 
 @st.cache_resource
 def load_edema_model():
-    return tf.keras.models.load_model(os.path.join(os.getcwd(), 'edema_detection_model.h5'))
+    url = "https://pnemonia.s3.us-east-1.amazonaws.com/edema_detection_model.h5"
+
+    # Check if model is already cached, if not, download it
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".h5") as temp_file:
+            model_path = temp_file.name
+
+            # Download model if not cached
+            st.info("Downloading model...")
+            response = requests.get(url)
+            response.raise_for_status()
+
+            # Write model content to temporary file
+            with open(model_path, 'wb') as model_file:
+                model_file.write(response.content)
+
+            st.success("Model loaded successfully.")
+            return load_model(model_path)
+
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error downloading model: {e}")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
 @st.cache_resource
 def load_cancer_model():
-    return tf.keras.models.load_model(os.path.join(os.getcwd(), 'trained_lung_cancer_model.h5'))
+    url = "https://pnemonia.s3.us-east-1.amazonaws.com/trained_lung_cancer_model.h5"
+
+    # Check if model is already cached, if not, download it
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".h5") as temp_file:
+            model_path = temp_file.name
+
+            # Download model if not cached
+            st.info("Downloading model...")
+            response = requests.get(url)
+            response.raise_for_status()
+
+            # Write model content to temporary file
+            with open(model_path, 'wb') as model_file:
+                model_file.write(response.content)
+
+            st.success("Model loaded successfully.")
+            return load_model(model_path)
+
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error downloading model: {e}")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
 # Preprocess the input image
 def load_and_preprocess_image(uploaded_image, image_size, is_xray=False):
